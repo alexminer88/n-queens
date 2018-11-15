@@ -125,8 +125,11 @@ window.countNRooksSolutions = function (n) {
 // };
 
 window.findNQueensSolution = function (n) {
-  if (n === 2 || n === 3) {
-    return 0;
+  if (n === 2) {
+    return [[], []];
+  }
+  if (n === 3) {
+    return [[], [], []];
   }
   let board = new Board({ n });
   let placedPieces = 0;
@@ -136,8 +139,11 @@ window.findNQueensSolution = function (n) {
   let recursiveQueenCheck = function (rowIndex) {
     // base
     if (placedPieces === n) {
-      debugger;
-      solution.push(board.rows().slice());
+      let sol = [];
+      for (let i = 0; i < n; i++) {
+        sol.push(board.rows()[i].slice());
+      }
+      solution.push(sol);
       return;
     }
 
@@ -166,10 +172,11 @@ window.findNQueensSolution = function (n) {
   };
 
   recursiveQueenCheck(0);
-  debugger;
   // console.log('final placedPieces: ', placedPieces);
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution[0]));
 
+  let finalSolution = new Board(solution[0]);
+  // debugger;
   return solution[0];
 };
 
