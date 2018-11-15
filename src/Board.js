@@ -173,15 +173,15 @@
     hasAnyMajorDiagonalConflicts: function () {
       let rows = this.rows();
 
-      for (let col = 0; col < rows.length; col++) {
-        let result = this.hasMajorDiagonalConflictAt(0, col);
+      for (let row = 0; row < rows.length; row++) {
+        let result = this.hasMajorDiagonalConflictAt(0, row);
         if (result) {
           return true;
         }
       }
 
-      for (let row = 1; row < rows.length; row++) {
-        let result = this.hasMajorDiagonalConflictAt(row, 0);
+      for (let col = 1; col < rows.length; col++) {
+        let result = this.hasMajorDiagonalConflictAt(col, 0);
         if (result) {
           return true;
         }
@@ -198,7 +198,7 @@
     // test if a specific minor diagonal on this board contains a conflict
     hasMinorDiagonalConflictAt: function (minorDiagonalColumnIndexAtFirstRow, row = 0) {
       let rows = this.rows();
-      let colInd = majorDiagonalColumnIndexAtFirstRow;
+      let colInd = minorDiagonalColumnIndexAtFirstRow;
       let counter = 0;
 
       for (let i = row; i < rows.length; i++) {
@@ -219,6 +219,27 @@
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function () {
+      let rows = this.rows();
+
+      // iterate over rows
+      for (let col = 0; col < rows.length; col++) {
+        // call this.hasMinorDiagonalConflictAt(row, 0)
+        let result = this.hasMinorDiagonalConflictAt(col, 0);
+        if (result) {
+          return true;
+        }
+      }
+
+      // iterate over last column, because of how hasMinorGiagonalConflict at traverses
+      for (let row = 1; row < rows.length; row++) {
+        // call this.hasMinorDiagonalConflictAt(rows.length - 1, col)
+        let result = this.hasMinorDiagonalConflictAt(rows.length - 1, row);
+        if (result) {
+          return true;
+        }
+      }
+
+
       return false; // fixme
     }
 
