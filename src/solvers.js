@@ -98,7 +98,8 @@ window.findAllQueensSolutions = function (n) {
   let solution = [];
 
 
-  let recursiveQueenCheck = function (rowIndex) {
+  let recursiveQueenCheck = function (rowIndex, occupiedCols = []) {
+    // debugger;
     if (placedPieces === n) {
       let sol = [];
       for (let i = 0; i < n; i++) {
@@ -113,15 +114,20 @@ window.findAllQueensSolutions = function (n) {
     }
 
     for (let i = 0; i < board.rows().length; i++) {
-      board.togglePiece(rowIndex, i);
-      placedPieces++;
-      if (board.hasAnyQueensConflicts()) {
+      // OPTIMIZATION
+      if (!occupiedCols.includes(i)) {
         board.togglePiece(rowIndex, i);
-        placedPieces--;
-      } else {
-        recursiveQueenCheck(rowIndex + 1);
-        board.togglePiece(rowIndex, i);
-        placedPieces--;
+        placedPieces++;
+        if (board.hasAnyQueensConflicts()) {
+          board.togglePiece(rowIndex, i);
+          placedPieces--;
+        } else {
+          occupiedCols.push(i);
+          recursiveQueenCheck(rowIndex + 1, occupiedCols);
+          occupiedCols.pop();
+          board.togglePiece(rowIndex, i);
+          placedPieces--;
+        }
       }
     }
   };
