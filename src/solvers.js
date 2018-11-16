@@ -22,14 +22,9 @@ window.findNRooksSolution = function (n) {
 
   for (let i = 0; i < rows.length; i++) {
     for (let j = 0; j < rows.length; j++) {
-
       if (i === j) {
         board.togglePiece(i, j);
       }
-      // board.togglePiece(i, j);
-      // if (board.hasAnyRooksConflicts()) {
-      //   board.togglePiece(i, j);
-      // }
     }
   }
 
@@ -43,16 +38,15 @@ window.findNRooksSolution = function (n) {
 window.countNRooksSolutions = function (n) {
   let board = new Board({ n });
   let placedPieces = 0;
-  let solution = [];
-
+  let solutions = [];
 
   let recursiveRooksCheck = function (rowIndex) {
     if (placedPieces === n) {
-      let sol = [];
+      let currentSolution = [];
       for (let i = 0; i < n; i++) {
-        sol.push(board.rows()[i].slice());
+        currentSolution.push(board.rows()[i].slice());
       }
-      solution.push(sol);
+      solutions.push(currentSolution);
       return;
     }
 
@@ -75,14 +69,15 @@ window.countNRooksSolutions = function (n) {
   };
 
   recursiveRooksCheck(0);
-  solutionCount = solution.length;
 
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+  console.log('Number of solutions for ' + n + ' rooks:', solutions.length);
+
+  return solutions.length;
 };
 
 window.findNQueensSolution = function (n) {
   let result = this.findAllQueensSolutions(n);
+
   return result[0];
 };
 
@@ -90,22 +85,24 @@ window.findAllQueensSolutions = function (n) {
   if (n === 2) {
     return [[0, 0], [0, 0]];
   }
+
   if (n === 3) {
     return [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
   }
+
   let board = new Board({ n });
   let placedPieces = 0;
-  let solution = [];
-
+  let solutions = [];
 
   let recursiveQueenCheck = function (rowIndex, occupiedCols = []) {
-    // debugger;
     if (placedPieces === n) {
-      let sol = [];
+      let currentSolution = [];
+
       for (let i = 0; i < n; i++) {
-        sol.push(board.rows()[i].slice());
+        currentSolution.push(board.rows()[i].slice());
       }
-      solution.push(sol);
+      solutions.push(currentSolution);
+
       return;
     }
 
@@ -114,7 +111,6 @@ window.findAllQueensSolutions = function (n) {
     }
 
     for (let i = 0; i < board.rows().length; i++) {
-
       let isNotOnDiag = function () {
         let x = 1;
         for (let k = occupiedCols.length - 1; k >= 0; k--) {
@@ -144,17 +140,19 @@ window.findAllQueensSolutions = function (n) {
   };
 
   recursiveQueenCheck(0);
-  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution[0]));
+  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solutions[0]));
 
-  return solution;
+  return solutions;
 };
 
 window.countNQueensSolutions = function (n) {
-  var solutionCount = findAllQueensSolutions(n).length;
+  let solutionCount = findAllQueensSolutions(n).length;
+
   if (n === 2 || n === 3) {
     return 0;
   }
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+
   return solutionCount;
 };
