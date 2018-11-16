@@ -114,8 +114,19 @@ window.findAllQueensSolutions = function (n) {
     }
 
     for (let i = 0; i < board.rows().length; i++) {
-      // OPTIMIZATION
-      if (!occupiedCols.includes(i)) {
+
+      let isNotOnDiag = function () {
+        let x = 1;
+        for (let k = occupiedCols.length - 1; k >= 0; k--) {
+          if ((occupiedCols[k] === i - x) || (occupiedCols[k] === i + x)) {
+            return false;
+          }
+          x++;
+        }
+        return true;
+      };
+
+      if (!occupiedCols.includes(i) && isNotOnDiag()) {
         board.togglePiece(rowIndex, i);
         placedPieces++;
         if (board.hasAnyQueensConflicts()) {
