@@ -40,7 +40,7 @@ window.countNRooksSolutions = function (n) {
   let placedPieces = 0;
   let solutions = [];
 
-  let recursiveRooksCheck = function (rowIndex) {
+  let recursiveRooksCheck = function (rowIndex, occupiedCols = []) {
     if (placedPieces === n) {
       let currentSolution = [];
       for (let i = 0; i < n; i++) {
@@ -55,15 +55,19 @@ window.countNRooksSolutions = function (n) {
     }
 
     for (let i = 0; i < board.rows().length; i++) {
-      board.togglePiece(rowIndex, i);
-      placedPieces++;
-      if (board.hasAnyRooksConflicts()) {
+      if (!occupiedCols.includes(i)) {
         board.togglePiece(rowIndex, i);
-        placedPieces--;
-      } else {
-        recursiveRooksCheck(rowIndex + 1);
-        board.togglePiece(rowIndex, i);
-        placedPieces--;
+        placedPieces++;
+        if (board.hasAnyRooksConflicts()) {
+          board.togglePiece(rowIndex, i);
+          placedPieces--;
+        } else {
+          occupiedCols.push(i);
+          recursiveRooksCheck(rowIndex + 1, occupiedCols);
+          occupiedCols.pop();
+          board.togglePiece(rowIndex, i);
+          placedPieces--;
+        }
       }
     }
   };
